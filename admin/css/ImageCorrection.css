@@ -1,0 +1,25 @@
+/* 
+    Document   : ImageCorrection
+    Created on : 4 févr. 2012, 22:29:02
+    Author     : admin
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.node_cont {
+    display: inline-block;
+    float: left;
+    border: #999999 solid 1px;
+    padding: 5px;
+    margin: 5px;
+}
+.loader_cont {
+    min-height: 25px
+}
+.img_cont {
+    max-width: 200px;
+    min-width: 200px;
+    max-height: 200px;
+    min-height: 200px;
+}
+

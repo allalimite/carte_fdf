@@ -1,0 +1,307 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Exporter les articles</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="icon" type="image/png" href="img/blason_small.png" />
+        <link href="css/composer.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="css/jquery-ui-1.8.16.custom.css" media="all" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?libraries=geometry&amp;sensor=false"></script>
+        <script type="text/javascript" src="../js/constant.js"></script>
+        <script type="text/javascript" src="../js/common.js"></script>
+        <script type="text/javascript" src="js/query.js"></script>
+        <script type="text/javascript">
+            var dateSelector = undefined;
+            var currentYear = undefined;
+            var currentMonth = undefined;
+            var articles = [];
+            var tableID = '14KaGvp7V8tEYv8j7Q8IVZShkp7fPa-j0pJ5fVXo';
+            $(function() {
+                mds.query.loginInfo = {
+                    apiKey: 'AIzaSyCXzHtxxyp-EEQdc8I7gswxFM6DwgBXJBI'
+                };
+                $( '#load_dialog' ).dialog({
+                    width: 250,
+                    height: 150,
+                    autoOpen: false,
+                    resizable: false,
+                    modal: true,
+                    draggable: false
+                });
+                $('#tabs').tabs();
+                $('#apply_button').button().click(function(){
+                    var html = $('#html_text').val();
+                    $('#preview').html(html);
+                    $('#tabs').tabs('select', 0);
+                });
+                testCat();
+                loadCalendar();
+                $('#cat_selector').change(function(){
+                    if(articles.length > 1) {
+                        displayList();
+                    }
+                });
+            });
+            
+            function testCat() {
+                for(tcat in mds.constant.FD_CATEGORY) {
+                    var _cat = mds.constant.FD_CATEGORY[tcat];
+                    if(typeof(mds.constant.FD_KAOS[_cat['kaos']]) === 'undefined') {
+                        console.log('Pas de catégorie pour '+tcat);
+                    }
+                }
+                var cat_html = '<option value="">Toutes</option>';
+                for(kcat in mds.constant.FD_KAOS) {
+                    cat_html += '<option value="'+kcat+'">'
+                        +kcat+'</option>';
+                }
+                $('#cat_selector').html(cat_html);
+            }
+            function displayCat() {
+                for(kcat in mds.constant.FD_KAOS) {
+                    mds.constant.FD_KAOS[kcat].count = 0;
+                }
+                for(i=0; i < articles.length; i++) {
+                    var fd_cat = mds.constant.FD_CATEGORY[articles[i][8]];
+                    var kaos_cat = mds.constant.FD_KAOS[fd_cat['kaos']];
+                    if(typeof(kaos_cat) === 'undefined') {
+                        console.log("Non trouvé: "+articles[i][8])
+                    } else {
+                        kaos_cat.count ++;
+                    }
+                }
+                var html = '';
+                var total = 0;
+                for(kcat in mds.constant.FD_KAOS) {
+                    var count = mds.constant.FD_KAOS[kcat].count;
+                    
+                    html += '<span style="display: inline-block; width: 150px">'+kcat+':</span>'+count+'<br/>';
+                    total += count;
+                }
+                html+= '<br/><strong><span style="display: inline-block; width: 150px">Total:</span>'+total+'</strong>';
+                $('#kaos_stats').html(html);
+            }
+            
+            function displayList() {
+                var catFilter = $('#cat_selector').val();
+                var mapUrl = $('#map_url').val();
+                if(mapUrl.length < 10) {
+                    mapUrl = 'http://carte.franceserv.com/';
+                }
+                if(typeof(mds.constant.FD_KAOS[catFilter]) === 'undefined') {
+                    catFilter = undefined;
+                }
+                var curDay = undefined;
+                var html = '<p>Carte du mois, ';
+                if(catFilter) {
+                    html += 'catégorie "'+catFilter + '", ';
+                }
+                var img_map = $('#img_map').val();
+                var img_size = $('#img_size').val();
+                html += ' <a href="'+mapUrl+'/index.php?year='+currentYear+'&month='+currentMonth+'" target="_blank">';
+//                    html += '<img src="http://images-2.findicons.com/files/icons/2305/mobile_icon_set/128/04_maps.png" width="15px" height="15px" />';
+                html += mds.constant.MONTHS[parseInt(currentMonth+'')];
+                html += ' '+currentYear;
+                html += '</a>';
+                html += '</p>\n';
+                for(i=0; i < articles.length; i++) {
+                    
+                    var article = new Object();
+                    article.id = articles[i][0];
+                    article.date = articles[i][1];
+                    article.titre = articles[i][2];
+                    article.auteur = articles[i][3];
+
+                    article.lien = articles[i][4];
+                    article.src_nom = articles[i][5];
+                    article.src_lien = articles[i][6];
+                    article.rowid = articles[i][7];
+                    article.fd_cat = articles[i][8];
+                    
+                    if(catFilter !== undefined) {
+                        var kcat = mds.constant.FD_CATEGORY[article.fd_cat].kaos;
+                        if(kcat !== catFilter) {
+                            continue;
+                        }
+                    }
+                    
+                    var date = new Date(parseInt(article.date));
+                    var day = date.getDate();
+                    var newPar = !curDay || day !== curDay;
+                    if(newPar) {
+                        if(i > 0) {
+                            html += '</p>';
+                        }
+                        html += '<p>';
+                    }   
+                    html += '<span style="list_date">'
+                    html += mds.common.addZero(day, 2) 
+                        + '/' + mds.common.addZero(date.getMonth()+1, 2) + ':';
+                    html += '</span><span style="list_titre">'
+                    html += ' '+article.titre+'</span>';
+                    html += ' (<a style="list_link" href="'+article.src_lien+'" target="_blank">'
+//                            + '<img src="http://www.imcassociation.edu/journals/images/icon_journals_person.png" width="15px" height="15px" />'
+                        + 'source'
+                        + '</a>)'
+                        + '<a href="'+mapUrl+'/index.php?id='+article.id+'" target="_blank">'
+                        + '<img src="'+img_map+'" width="'+img_size+'" height="'+img_size+'" />'
+                        +'</a>'
+                        + '<br/>';
+                    curDay = day;
+                }
+                html += '</p>';
+                $('#html_text').val(html);
+                $('#preview').html(html);
+            }
+            
+            function loadCalendar() {
+                $('#year_selector').html('');
+                $('#month_selector').html('');
+                $( '#load_dialog' ).dialog( "option", "title", 'Chargement du calendrier' );
+                $( '#load_dialog' ).dialog('open');
+                var sql = "SELECT 'ANNEE', 'MOIS', COUNT() FROM "+tableID+" WHERE ETAT=1 GROUP BY 'ANNEE', 'MOIS'";
+                mds.query.fusionTableGET(sql, function(res) {
+                    $( '#load_dialog' ).dialog('close');
+                    dateSelector = new Object();
+                    var calendarInfos = res.rows;
+                    var size = calendarInfos.length;
+                    for(n=0; n<size; n++) {
+                        var calendarInfo = calendarInfos[n];
+                        var annee = calendarInfo[0];
+                        var mois = calendarInfo[1];
+                        var count = calendarInfo[2];
+                        if(! dateSelector[annee]) {
+                            dateSelector[annee] = new Object();
+                        }
+                        if(! dateSelector[annee][mois]) {
+                            dateSelector[annee][mois] = new Object();
+                        }
+                        dateSelector[annee][mois].count = count;
+                    }
+                    var htmlYear = '<option></option>';
+                    for(year in dateSelector) {
+                        htmlYear += '<option>';
+                        htmlYear += year;
+                        htmlYear += '</option>';
+                    }
+                    $('#year_selector').html(htmlYear).change(function(){
+                        var selectedYear = $('#year_selector option:selected').val();
+                        if(selectedYear && selectedYear.length === 4) {
+                            currentYear = selectedYear;
+                            var htmlMonth = '<option></option>';
+                            for(month in dateSelector[selectedYear]) {
+                                htmlMonth += '<option value="' + month + '" >';
+                                htmlMonth += mds.constant.MONTHS[parseInt(month+'')] + ' (' + 
+                                    dateSelector[selectedYear][month].count + ')';
+                                htmlMonth += '</option>';
+                            }
+                            $('#month_selector').html(htmlMonth).change(function(){
+                                var selectedMonth = $('#month_selector option:selected').val();
+                                if(selectedMonth && selectedMonth.length > 0) {
+                                    currentMonth = selectedMonth;
+                                    loadArticles();
+                                }
+                            });
+                        }
+                    }
+                );},
+                function(status, error) {
+                    console.log('error: '+status+', error='+error);
+                }
+            );}
+            function loadArticles() {
+                $( '#load_dialog' ).dialog( "option", "title", 'Chargement des articles' );
+                $( '#load_dialog' ).dialog('open');
+                var invert = $('#list_order').is(':checked');
+                
+                var sql = "SELECT ID, DATE, TITRE, AUTEUR, LIEN, SRC_NOM, SRC_LIEN, ROWID, FD_CAT"
+                    + " FROM " + tableID
+                    + " WHERE ANNEE=" + currentYear
+                    + " AND MOIS=" + currentMonth
+                    + " AND ETAT=1";
+                if(invert) {
+                    sql += " ORDER BY DATE DESC";
+                } else {
+                    sql += " ORDER BY DATE ASC";
+                }
+//                    + " AND EDITEUR='KAOS'"
+                    
+                console.log('load articles: '+sql);
+                mds.query.fusionTableGET(
+                sql, 
+                function(res) {
+                    articles = res.rows;
+                    displayList();
+                    displayCat();
+                    $('#load_dialog' ).dialog('close');
+                    $('#tabs').tabs('option', 'disabled', false);
+                },
+                function(status, error) {
+                    console.log('error: '+status+', error='+error);
+                }
+            )};
+        </script>
+    </head>
+    <body>
+        <div id ="load_dialog">
+            <div style="margin-top: 30px; margin-left: 90px;">
+                <img src="img/loading.gif" />
+            </div>
+            <div id="load_dialog_msg"></div>
+        </div>
+        <div id="article_loader">
+            <strong>Calendrier</strong>
+            &nbsp;&nbsp;
+            <strong>Année</strong>
+            &nbsp;
+            <select id="year_selector"></select>
+            &nbsp;&nbsp;
+            <strong>Mois</strong>
+            &nbsp;
+            <select id="month_selector"></select>
+            &nbsp;&nbsp;
+            <strong>Catégorie</strong>
+            &nbsp;
+            <select id="cat_selector"></select>
+            &nbsp;
+            <input id="list_order" type="checkbox" value="1" ><strong>&nbsp;Liste inversée</strong></input>
+            <br/>
+            <strong>Image</strong>
+            &nbsp;
+            <input id="img_map" type="text" style="width: 60%" value="http://www.monprojetdaffaires.com/Images/road_map_icon.jpg" />
+            <br/>            
+            <strong>Taille Image
+            </strong>&nbsp;
+            <input id="img_size" type="text" value="15px" style="width: 50px" />
+            <br/>            
+            <strong>Site carte</strong>&nbsp;
+            <input id="map_url" type="text" value="http://carte.franceserv.com" style="width: 60%" />
+            <br/>
+            <button id="apply_button">Appliquer les changements</button>
+        </div>
+        <div id="tabs">
+            <ul>
+                <li><a href="#visu">Visualisation</a></li>
+		<li><a href="#code">Code HTML</a></li>
+		<li><a href="#stats">Stats</a></li>
+            </ul>
+            <div id="visu">
+                <div style="width: 597px; border: 1px black solid;" id="preview"></div>
+            </div>
+            <div id="code">
+                <textarea id="html_text" rows="40" style="width: 100%" ></textarea>
+            </div>
+            <div id="stats">
+                <div id="kaos_stats" ></div>
+                
+            </div>
+        </div>
+    </body>
+</html>

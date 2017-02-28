@@ -1,0 +1,199 @@
+#main_bar a {
+    font-size: 1.3em;
+    margin-right: 5px;
+}
+#main_bar a:link {
+    color: whitesmoke
+}
+#main_bar a:visited {
+    color: whitesmoke
+}
+#main_bar {
+    width: 100%;
+    height: px;
+}
+#menu {
+    margin-top: 10px;
+}
+#map {
+    width: 100%;
+    height: calc(100% - 40px);
+}
+.localisation_text {
+    font-weight: bold;
+}
+#legend_content_id {
+    cursor: n-resize;
+}
+/*.legend_cat_class {
+    font-weight: bold;
+    border-top: #aaaaaa dashed 1px;
+    border-bottom: #aaaaaa dashed 1px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}*/
+.legend_content {
+    min-height: 160px;
+    overflow: scroll;
+}
+#cat_filter_selector {
+    width: 100%;
+}
+#infobox_button_close {
+    float: right;
+    margin-top: 8px;
+    margin-right: -16px;
+}
+#article_preview_id {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-bottom: 5px;
+    margin-left: 0px;
+}
+.marker_label {
+    width: 200px;
+}
+.marker_label p {
+    margin: 0px;
+}
+.marker_label span {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-size: .8em;
+}
+#insee_select {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    width: 60%;
+}
+.insee_category {
+    min-height: 160px;
+    max-width: 500px;
+}
+/*.insee_chart {
+    top: 8px;
+    border-radius: 8px;
+    margin: 0 auto;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #cccccc;
+}*/
+.insee_data_table {
+    width: 100%;
+}
+.insee_data_desc {
+    font-size: 11px;
+    border-bottom-width: 1px;
+    border-bottom-color: darkgray;
+    border-bottom-style: dashed;
+}
+.insee_data_val {
+    font-weight: bold;
+    padding-left: 5px;
+    padding-top: 5px;
+    border-left-width: 1px;
+    border-left-color: darkgray;
+    border-left-style: dashed;
+    border-bottom-width: 1px;
+    border-bottom-color: darkgray;
+    border-bottom-style: dashed;
+}
+.article_date_class {
+/*    background: red;*/
+    margin-right: 10px;
+}
+.article_geo_class {
+/*    background: blue;
+    color: white;*/
+}
+.article_author_class {
+/*    background: green;
+    color: white;*/
+}
+.article_link_class {
+/*    background: #d3d3d3;*/
+}
+#article_id {
+    max-height: 400px;
+    overflow: auto
+}
+#article_list_id {
+    max-height: 400px;
+    overflow: auto
+}
+#annuaire_select {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    width: 60%;
+}
+.annuaire_title {
+    margin-right: 10px;
+    padding-top: 6px;
+    font-weight: bold;
+}
+.annuaire_text {
+    margin-top: 10px;
+    margin-right: 20px;
+}
+.annuaire_line {
+    border-top: #cccccc 1px dotted;
+    left: 20%;
+    width: 80%;
+    height: 1px;
+}
+.annuaire_separator {
+    height: 10px;
+}
+
+#calendar_table {
+/*    border: 1px #cd0a0a solid;*/
+}
+
+.calendar_year_data_class {
+/*    border: 1px green solid;*/
+    font-weight: bold;
+    font-size: 1.3em;
+    border-left: 2px #cccccc dotted;
+/*    padding-bottom: 15px;*/
+}
+.calendar_month_data_class {
+/*    width: 200px;*/
+}
+.calendar_article_data_class {
+/*    width: 200px;*/
+/*    border-right: 1px #aaaaaa solid;*/
+}
+.calendar_icon_data_class {
+    padding-left: 10px;
+    padding-right: 5px;
+}
+.annuaire_source_class {
+    font-style: italic;
+}
+
+#heat_map {
+    width: 100%;
+    height: 100%;
+}
+#heat_map_container{
+    width: 100%;
+    height: 92%;
+}
+#debug_id {
+    background: #212121;
+    color: greenyellow;
+    border: thin;
+    border-color: red;
+    padding: 3px;
+        
+}
+#calendar_stat_id {
+    width: 100%;
+    height: 100%;
+}

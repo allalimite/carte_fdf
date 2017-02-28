@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.sitemaps.org/schemas/sitemap-video/1.1">
+    <url>
+        
+        <loc>http://carte.franceserv.com/index.php</loc>
+        <changefreq>daily</changefreq>
+        <image:image>
+            <image:loc>http://carte.franceserv.com/img/fb_img.png</image:loc> 
+        </image:image>
+    </url>
+    <url> 
+        <loc>http://carte.franceserv.com/index.php?year=2011</loc>
+        <changefreq>weekly</changefreq>
+    </url>
+    <url> 
+        <loc>http://carte.franceserv.com/index.php?year=2012</loc>
+        <changefreq>weekly</changefreq>
+    </url>
+</urlset>

@@ -1,0 +1,29 @@
+/* 
+    Document   : list
+    Created on : 17 nov. 2012, 10:24:45
+    Author     : admin
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+.list_date {
+    background-color: darkorange;
+    margin-right: 2px;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+.list_title {
+    font-size: 0.85em;
+    background-color: #EEEEEE
+}
+.list_link {
+    font-size: 0.85em;
+}
+.list_img {
+    width: 15px;
+    height: 15px;
+}
+

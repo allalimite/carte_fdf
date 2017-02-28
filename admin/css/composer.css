@@ -1,0 +1,221 @@
+#edit_dialog {
+    padding: 20px;
+}
+#edit_dialog input {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    width: 99%;
+}
+#edit_dialog button {
+    font-size: 13px;
+    margin-top: 20px;
+    width: 49%;
+    min-height: 25px;
+}
+#edit_info {
+    font-size: 13px;
+    min-height: 20px;
+}
+#login_dialog {
+    
+}
+#login_dialog div{   
+    float: left;
+}
+#login_dialog input{
+    min-width: 220px;
+}
+#accountHeader {
+    margin-top: 4px;
+    margin-right: 4px;
+    border-radius: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
+    float: right;
+    background: #e6e6e6;
+    font-size: .8em;
+    border: 1px #555555 solid;
+}
+#loginInfo {
+    padding-top: 4px;
+}
+#accountUser {
+    
+    padding-top: 4px;
+    padding-right: 10px;
+    font-size: 0.9em;
+    float: left;
+}
+#accountButton {
+    
+}
+#article_index {
+    text-decoration: none;
+}
+#article_index_text {
+    width: 35px;
+}
+#article_date {
+    text-decoration: none;
+}
+#article_id {
+    text-decoration: none;
+}
+#article_loader {
+    border: 1px #555555 solid;
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+    background-color: lightsteelblue;
+    height: 10%;
+}
+#article_detail {
+    padding: 10px;
+}
+#article_titre {
+    width: 100%;
+}
+#article_src_lien {
+    width: 100%;
+}
+article_src_custom {
+    width: 60%;
+}
+#article_blog_lien {
+    width: 100%;
+}
+#fd_cat {
+    width: 20%;
+}
+#buttonBegin {
+/*    display: none;*/
+}
+
+#article_frame {
+    padding: 6px;
+    border-radius: 5px;
+    border: 1px #555555 solid;
+    background-color: ghostwhite;
+    margin-top: 2px;
+    float: right;
+    width: 59%;
+    height: 90%;
+}
+
+#left_panel {
+    padding: 6px;
+    margin-top: 2px;
+    float: left;
+    width: 38%;
+    height: 90%;
+    border-radius: 5px;
+    border: 1px #555555 solid;
+    font-size: .7em;
+    overflow: auto; 
+}
+#article_preview {
+    width: 420px;
+    overflow: auto;
+    border: 1px black solid;
+}
+
+#geo {
+    
+    width: 90%;
+    height: 80%;
+}
+
+#geo_search {
+    width: 90%;
+}
+#geo_map {
+    
+    margin-top: 6px;
+    width: 100%;
+    height: 70%;
+/*    width: 350px;
+    height: 350px;*/
+}
+#geo_result {
+    margin-top: 6px;
+}
+#geo_table {
+    width: 98%;
+    margin-left: 1%;
+    border: 1px #d3d3d3 solid;
+}
+#geo_cell_val {
+    color: darkblue;
+    text-align: center;
+    min-width: 49%;
+    border-left: 1px #363636 solid;
+    border-bottom: 1px #363636 solid;
+}
+#geo_cell_title {
+    
+    text-align: left;
+    min-width: 49%;
+    border-bottom: 1px #363636 solid;
+}
+#button_content_add {
+    width: 25%;
+}
+#button_content_del {
+    width: 25%;
+}
+#article_content {
+    
+}
+#article_content_ctrl {
+    padding: 4px;
+    background: #EEEEEE;
+    margin-bottom: 10px;
+}
+#article_content_text_id {
+    display: none;
+}
+#article_content_text {
+    width: 100%;
+}
+#article_content_image_id {
+    display: none;
+}
+#article_content_video_id {
+    display: none;
+}
+#image_url {
+    width: 80%
+}
+#image_credit {
+    width: 80%
+}
+#image_w {
+    width: 20%;
+}
+#image_h {
+    width: 20%;
+}
+#video_embed {
+    width: 100%;
+}
+.text_content_class {
+}
+.image_content_class {
+}
+.video_content_class {
+}
+.separator {
+    width: 80%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10%;
+    border-top: 1px #aaaaaa dashed;
+}
+#press_name {
+    width: 90%;
+}
+#press_link {
+    width: 90%;
+}
+

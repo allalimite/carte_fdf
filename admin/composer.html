@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html style="height:100%">
+    <head>
+        <title>Editeur de faits divers (mds.composer-v1.0)</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="icon" type="image/png" href="img/blason_small.png" />
+        <link href="css/composer.css" media="all" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="css/jquery-ui-1.8.16.custom.css" type="text/css" media="all" />
+        <script type='text/javascript' src="https://apis.google.com/js/client.js"></script>
+        <script type='text/javascript' src='https://www.google.com/jsapi'></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?libraries=geometry&amp;sensor=false"></script>
+        <script type="text/javascript" src="../js/common.js"></script>
+        <script type="text/javascript" src="../js/constant.js"></script>
+        <script type="text/javascript" src="../js/logging.js"></script>
+        <script type="text/javascript" src="js/composer.js"></script>
+        <script type="text/javascript" src="js/auth.js"></script>
+        <script type="text/javascript" src="js/datasource.js"></script>
+        <script type="text/javascript" src="js/query.js"></script>
+        <script type="text/javascript" src="js/jquery.textchange.min.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                mds.composer.initComposer();
+            });
+        </script>
+    </head>
+    <body style="height:97%">
+        <div id ="press_dialog">
+            <strong>Nom de la source</strong>
+            <br />
+            <input id="press_name" type="text" value="" />
+            <br />
+            <strong>Adresse de la source</strong>
+            <br />
+            <input id="press_link" type="text" value="" />
+            <br />
+            <div id="press_info"></div>
+            <br />
+            <button id="press_valid">Valider</button>
+        </div>
+        <div id ="load_dialog">
+            <div style="margin-top: 30px; margin-left: 90px;">
+                <img src="img/loading.gif" />
+            </div>
+            <div id="load_dialog_msg"></div>
+        </div>
+        <div id ="login_dialog">
+            <div>
+                <p id="login_info" align="center"></p>
+            </div>
+            <br/>
+            <div id="login_input">
+                <p>Renseigner les informations d'indentification</p>
+                <strong>API key:</strong>
+                <input id="login_apikey" type="text" value="" />
+                <br/>
+                <strong>Client ID:</strong>
+                <input id="login_clientid" type="text" value="" />
+                <br/>
+                <p align="center">
+                    <button id="login_btn" >Connection</button>
+                </p>
+            </div>
+            <br/>
+            <div id="account_checker">
+
+            </div>
+        </div>
+        <div id ="main" style="width: 100%; height: 96%;">
+            <div>
+                <div id="article_loader">
+                    <div id="accountHeader">
+                        <button id="button_login">Login</button>
+                        <button id="button_reset_credential">Reset Credentials</button>
+                    </div>
+                    <strong>Type</strong>
+                    &nbsp;
+                    <select id="status_selector">
+                        <option value="0">A éditer</option>
+                        <option value="1">Déjà édités</option>
+                        <option value="2">Supprimés</option>
+                        <option value="3">A rependre</option>
+                    </select>
+                    <!--                    <strong>Source</strong>
+                                        &nbsp;-->
+                    <select style="display: none" id="editor_selector"></select>
+                    &nbsp;
+                    <strong>Année</strong>
+                    &nbsp;
+                    <select id="year_selector"></select>
+                    &nbsp;&nbsp;
+                    <strong>Mois</strong>
+                    &nbsp;<select id="month_selector"></select>
+
+                    &nbsp;
+                    <button id="button_reload">
+                        <img src="img/refresh.png"/>
+                    </button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button id="button_prev">
+                        <img src="img/collapse.png"/>
+                    </button>
+                    &nbsp;&nbsp;
+                    <span id="article_index">..&nbsp;/&nbsp;..</span>
+                    &nbsp;&nbsp;
+                    <button id="button_next">
+                        <img src="img/expand.png"/>
+                    </button>
+                    &nbsp;
+                    <strong>Index</strong>
+                    <input id="article_index_text" type="text" value=""/>
+                    &nbsp;
+                    <strong>ID</strong>
+                    <input id="article_id_text" type="text" value=""/>
+                    <a target="_blank" id="article_id_link">Lien</a>
+                    <br />
+                    
+                    
+                    <button id="button_status">
+                        &nbsp;Etat
+                    </button>
+                    &nbsp;&nbsp;
+                    <a id="article_status_text">article</a>
+                    <img id="article_status_icon" src="img/error.png"/>
+                    |
+                    <a id="geo_status_text">carte</a>
+                    <!--                    <img id="geo_status_icon" src="img/active.png"/>-->
+                    <img id="geo_status_icon" src="img/error.png"/>
+                    |
+                    <a id="content_status_text">contenu</a>
+                    <img id="content_status_icon" src="img/error.png"/>
+                    &nbsp;&nbsp;
+                    <button id="button_valid">
+                        <img src="img/save.png"/>&nbsp;Sauvegarder
+                    </button>
+                    <button id="button_del">
+                        <img src="img/stop.png"/>&nbsp;Supprimer
+                    </button>
+                    &nbsp;&nbsp;
+                    <button id="button_new">
+                        <img src="img/table_16.png"/>&nbsp;Nouveau
+                    </button>
+                    
+                </div>
+            </div>
+            <div id="left_panel">
+                <ul>
+                    <li><a href="#article_detail">Article</a></li>
+                    <li><a href="#geo">Carte</a></li>
+                    <li><a href="#article_content">Contenu</a></li>
+                    <li><a href="#article_preview">Visualisation</a></li>
+                </ul>
+                <div id="article_detail">
+
+                    <br />
+                    <strong>Categorie</strong>
+                    <br />
+                    <select id="fd_cat_selector">
+                        <option value=""></option>
+                    </select>
+                    <div class="separator" ></div>
+                    <strong>Titre</strong>
+                    <br />
+                    <input id="article_titre" type="text" value=""/>
+                    <div class="separator" ></div>
+                    <strong>Auteur</strong>
+                    <br />
+                    <input id="article_author" type="text" value=""/>
+                    <div class="separator" ></div>
+                    <strong>Date de publication</strong>
+                    <br />
+                    <input id="article_date" type="text"/>
+                    <div class="separator" ></div>
+                    <strong>Lien Journal</strong>&nbsp;
+                    <a id="article_src_lien_link" href="#" target="_self">Voir</a>
+                    <br />
+                    <input id="article_src_lien" type="text" value=""/>
+                    <div class="separator" ></div>
+                    <strong>Journal</strong>
+                    <a id="article_src_search" href="#" target="_self">Rechercher</a>
+                    &nbsp;&nbsp;<a id="article_src_add" href="#" target="_self">Ajouter une source</a>
+                    <br />
+                    <select id="article_source_selector">
+                        <option value=""></option>
+                    </select>
+                    <br />
+                    Hors catégorie&nbsp;<input id="article_src_custom" type="text"/>
+                    <div class="separator" ></div>
+
+                </div>
+                <div id="geo">
+                    <form action="javascript:mds.composer.geoSearch()">
+                        <strong>Géolicalisation:</strong>
+                        &nbsp;<a href="http://www.pagesjaunes.fr" target="_blank">Pages jaunes</a>
+                        &nbsp;<input id="geo_search" type="text" name="SearchBox" value="" />
+                    </form>
+                    <div id="geo_map"></div>
+                    <div id="geo_result"></div>
+                </div>
+                <div id="article_content">
+                    <div id="article_content_ctrl">
+                        
+                        <strong>Type</strong>&nbsp;
+                        <select id="content_type"></select>
+                        <button id="button_content_add">Ajouter</button>
+                        <br />
+                        
+                        <strong>Liste</strong>&nbsp;
+                        <select id="content_list"></select>
+                        <button id="button_content_del">Supprimer</button>
+                    </div>
+                    <div id="article_content_text_id">
+                        <div id="text_decoration" style="display: none">
+                            balises: strong, cite, i
+                        </div>
+                        <textarea id="article_content_text" rows="15" ></textarea>
+                    </div>
+                    <div id="article_content_image_id">
+                        <strong>URL</strong>&nbsp;<input id="image_url" type="text" name="" value="" />
+                        <br/>
+                        &nbsp;<strong>Crédit</strong>
+                        &nbsp;<input id="image_credit" type="text" name="" value="" />
+                        <br />
+                        <strong>Largeur</strong>
+                        &nbsp;<input id="image_w" type="text" name="" value="" />
+                        &nbsp;<strong>Hauteur</strong>
+                        &nbsp;<input id="image_h" type="text" name="" value="" />
+                        <br />
+                        <button id="button_apply_image">Appliquer</button>
+                        <div id="image"></div>
+                    </div>
+                    <div id="article_content_video_id">
+                        <strong>Code intégration</strong>
+                        <br />
+                        <textarea id="video_embed" rows="6" ></textarea>
+                        <br />
+                        <button id="button_apply_video">Appliquer</button>
+                        <div id="video"></div>
+                    </div>
+                    <div>
+                        <button id="button_article_content_valid">Valider</button>
+                    </div>
+                </div>
+                <div id="article_preview"></div>
+            </div>
+            <div id="article_frame">
+            </div>
+        </div>
+    </body>
+</html>
+

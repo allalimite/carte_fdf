@@ -1,0 +1,175 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="css/jquery-ui-1.8.16.custom.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="css/ImageCorrection.css" media="all" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?libraries=geometry&amp;sensor=false"></script>
+        <script type="text/javascript" src="../public/js/common.js"></script>
+        <script type="text/javascript" src="../public/js/constant.js"></script>
+        <script type="text/javascript" src="../public/js/image.js"></script>
+
+    </head>
+    <body>
+        <script type="text/javascript">
+            var images = [];
+            
+            function getImages() {
+                $('#loading').css('display', 'block');
+                var sql = "SELECT ROWID, ID, DONNEE FROM 1608746"
+                    +" WHERE DTYPE='IMAGE'";
+                mds.common.fusionTableQuery(
+                sql, 
+                function(rows) {
+                    try {
+                        images = [];
+                        for (i=0; i<rows.length; i++) {
+                            var txt = rows[i][2];
+                            var begin = txt.indexOf("<img");
+                            var end = txt.indexOf(">", begin);
+                            var content = txt.substr(begin, end+1);
+                            if(content.length < 10) {
+                                console.log('bad content: '+txt);
+                                continue;
+                            }
+                            var img = {
+                                error: false,
+                                loaded: false,
+                                rowid: rows[i][0],
+                                id: rows[i][1],
+                                content: content,
+                                source: txt.substr(end+1, txt.length)
+                            }
+                            images.push(img);
+                        }
+                        $('#loading').css('display', 'none');
+
+                        displayImages();
+                    } catch(ex) {
+                        console.log(ex);
+                    }
+                    
+                }, 
+                function(status, ex) {
+                    alert("Erreur "+status+", "+ex)
+                }
+            );
+            }
+            function displayImages() {
+                
+                count();
+                var imgList = $('#image_list');
+                imgList.html('');
+                $('#temp').html('');
+                for(i=0; i<images.length; i++) {
+                    imgList.append(createImageNode(i));
+                }
+            }
+            function createImageNode(i) {
+                //console.log('createImageNode '+i);
+                var nodeCont = $('<div></div>')
+                    .attr('class', 'node_cont')
+                    .attr('id', 'nodecont_'+images[i].rowid);
+                var img = $(images[i].content)
+                    .attr('id', 'img_'+images[i].rowid);
+                var wrapper = mds.image.wrap(img, 200, 200);
+                mds.image.setCallBack(wrapper, onLoaded(i), onError(i));
+                
+//                var suppress = $('<button>Supprimer</button>')
+//                    .button()
+//                    .click(supress(i));
+//                var correct = $('<button>Corriger</button>')
+//                    .button()
+//                    .click(correctSize(i));
+                var link = $('<a></a>');
+                link.attr('href', 'http://carte.franceserv.com/index.php?id='+images[i].id)
+                    .attr('target', '_blank')
+                    .html('Article: '+images[i].id);
+                var loader = $('<img/>')
+                    .attr('id', 'loader_'+images[i].rowid)
+                    .attr('src', 'img/vloader.gif');
+                var loaderCont=$('<div></div>')
+                    .attr('class', 'loader_cont');
+                nodeCont.append(link);
+                nodeCont.append($('<br/>'));
+//                nodeCont.append(correct);
+//                nodeCont.append(suppress);
+                var imgCont = $('<div></div>')
+                    .attr('class', 'img_cont')
+                loaderCont.append(loader)
+                imgCont.append(wrapper.getSelector())
+                nodeCont.append(loaderCont);
+                nodeCont.append(imgCont);
+                return nodeCont;
+            }
+            function supress(i) {
+                return function() {
+                    alert("Supprime "+images[i].rowid);
+                }
+            }
+            function correctSize(i) {
+                return function() {
+                    alert("Correct size "+images[i].rowid);
+                }
+            }
+            function onLoaded(i) {
+                return function() {
+                    if(!images[i].error){
+                        console.log('loaded '+i);
+                        images[i].loaded = true;
+                        $('#loader_'+images[i].rowid).css('display', 'none');
+                        count();
+                    }
+                }
+            }
+            function onError(i) {
+                return function() {
+                    console.log('error '+i);
+                    images[i].error = true;
+                    $('#loader_'+images[i].rowid).css('display', 'none');
+                    $('#img_'+images[i].rowid).attr('src', 'img/load_error.jpg');
+                    count();
+                }
+            }
+            function count() {
+                var nbLoaded = 0;
+                var nbError = 0;
+                for(i=0; i<images.length; i++) {
+                    if(images[i].loaded) {
+                        nbLoaded ++;
+                    }
+                    if(images[i].error) {
+                        nbError ++;
+                    }
+                }
+                var rest = images.length-(nbLoaded+nbError);
+                var html = 'Statut: chargées='+nbLoaded+', erreurs='+nbError+', total='+images.length+', reste='+rest;
+                $('#image_info').html(html);
+            };
+            $(function() {
+                $('#correct_img_btn').button().click(function(){
+                    getImages();
+                });
+            });
+        </script>
+
+        <div>
+            <button id="correct_img_btn">Charger les images</button>
+        </div>
+        <div id="loading" style="display: none">
+            <img src="img/vloader.gif"/>
+        </div>
+        <div id="image_info"></div>
+        <div id="image_list"></div>
+        <div id="temp">
+            <img src="img/load_error.jpg"/>
+        </div>
+    </body>
+</html>
